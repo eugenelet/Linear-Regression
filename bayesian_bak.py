@@ -136,9 +136,9 @@ def main(argv):
 	"""
 
 
-	"""
-	train_num = len(xy_data) * 0.8
-	cross_num = len(xy_data) * 0.2
+
+	train_num = len(xy_data) * 0.3
+	cross_num = len(xy_data) * 0.7
 	
 	train_x = xy_data[0:int(train_num),0]
 	train_y = xy_data[0:int(train_num),1]
@@ -150,10 +150,10 @@ def main(argv):
 	
 	global_error = 100000000
 	for _lambda in range(7,8):
-		basis = joint_gaussian_basis_2d(train_x,train_y,global_basis_n,(1081/global_basis_n)**2)
-		weight_MAP = train_MAP(basis, train_target, np.exp(-_lambda))
-		basis = joint_gaussian_basis_2d(cross_x,cross_y,global_basis_n,(1081/global_basis_n)**2)
-		res = test(basis, weight_MAP)
+		basis = joint_gaussian_basis_2d(train_x,train_y,global_basis_n,((1081/2)/global_basis_n)**2)
+		weight_ML = train_ML(basis, train_target)
+		basis = joint_gaussian_basis_2d(cross_x,cross_y,global_basis_n,((1081/2)/global_basis_n)**2)
+		res = test(basis, weight_ML)
 		error = MSE(res,cross_target)
 		print 'ERROR: %d lambda: %d' %(error,_lambda)
 		if(error < global_error):
@@ -163,30 +163,6 @@ def main(argv):
 	print '=================================='
 	print 'RESULT:   ERROR: %d lambda: %d' %(global_error,global_lambda)
 	print '=================================='
-	"""
-
-
-
-
-
-
-	##############################
-	# TRAIN
-	##############################
-
-		# basis = joint_gaussian_basis_2d(x,y,global_basis_n,(global_var*4)**2)
-	# Basis #
-	if poly_gauss:
-		basis = joint_gaussian_basis_2d(x,y,global_basis_n,(1081/global_basis_n)**2)
-	else:
-		basis = polynomial_basis(x,y,global_order)
-
-	# Method #
-	if ML_MAP:
-		weight_MAP = train_MAP(basis, target, np.exp(-global_lambda))
-	else:
-		weight_ML = train_ML(basis, target)
-
 
 
 
@@ -208,7 +184,7 @@ def main(argv):
 	# Basis #
 	if poly_gauss:
 		# basis = joint_gaussian_basis_2d(x,y,global_basis_n,(global_var*4)**2)
-		basis = joint_gaussian_basis_2d(x,y,global_basis_n,(1081/global_basis_n)**2)
+		basis = joint_gaussian_basis_2d(x,y,global_basis_n,((1081/2)/global_basis_n)**2)
 	else:
 		basis = polynomial_basis(x,y,global_order)
 

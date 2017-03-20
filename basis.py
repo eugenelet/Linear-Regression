@@ -6,12 +6,38 @@ def gaussian_basis(x, num,var):
 	range_x = max(x) - min(x)
 	gap_x = range_x / num
 
-
 	basis = np.ones(len(x))
 	for i in range (0,num):
 		basis = np.vstack((basis,np.exp(-0.5*(x - i*gap_x)**2/var)))
 
 	return basis
+
+def local_gaussian_basis(x, mean,var):
+	x = np.asarray(x)
+
+	basis = np.ones(len(x))
+	basis = np.vstack((basis,np.exp(-0.5*(x - mean)**2/var)))
+	# basis = np.exp(-0.5*(x - mean)**2/var)
+
+	return basis
+
+
+# x: data on x-axis
+# y: data on y-axis
+# num: number of basis
+# variance: variance of each basis
+def local_gaussian_basis_2d(x, y, u_x, u_y, variance):
+
+	x = np.asarray(x)
+	y = np.asarray(y)
+
+	# Bias term
+	basis = np.ones(len(x))
+	# Stack basis
+	basis = np.vstack((basis,np.exp(-0.5*(x - u_x)**2 + (y - u_y)/variance)))
+
+	return basis
+
 
 # x: data on x-axis
 # y: data on y-axis
@@ -38,6 +64,36 @@ def gaussian_basis_2d(x, y, num, variance):
 		basis = np.vstack((basis,np.exp(-0.5*(x - i*gap_x)**2/variance)))
 	for i in range (0,num):
 		basis = np.vstack((basis,np.exp(-0.5*(y - i*gap_y)**2/variance)))
+
+	return basis
+
+
+# x: data on x-axis
+# y: data on y-axis
+# num: number of basis
+# variance: variance of each basis
+def joint_gaussian_basis_2d(x, y, num, variance):
+
+	x = np.asarray(x)
+	y = np.asarray(y)
+
+	# Range of both axis
+	range_x = max(x) - min(x)
+	range_y = max(y) - min(y)
+
+	# Gaps between means
+	gap_x = range_x / num
+	gap_y = range_y / num
+
+	# Bias term
+	basis = np.ones(len(x))
+
+	# Stack basis
+	for i in range (0,num):
+		for j in range (0,num):
+			basis = np.vstack((basis,np.exp(-0.5*((x - i*gap_x + gap_x/2)**2 + (y - j*gap_y + gap_y/2)**2)/variance)))
+	# for i in range (0,num):
+		# basis = np.vstack((basis,np.exp(-0.5*(y - i*gap_y)**2/variance)))
 
 	return basis
 
